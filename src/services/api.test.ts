@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios'
+import { AxiosError, type InternalAxiosRequestConfig } from 'axios'
 import { ApiBusinessError, ApiHttpError } from '../utils/errors'
 
 // Mock de errorNotifier antes de importar api
