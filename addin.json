@@ -21,7 +21,7 @@
             "menuId": "Visores"
         },
         {
-            "url": "https://aerospace-liver-container.ngrok-free.dev/index.html",
+            "url": "https://addins-reports.vercel.app/index.html",
             "path": "Visores/",
             "menuName": {
                 "en": "Parametros",

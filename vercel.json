@@ -1,4 +1,9 @@
 {
+  "build": {
+    "env": {
+      "VITE_APP_BASE_URL": "https://addins-reports.vercel.app/"
+    }
+  },
   "headers": [
     {
       "source": "/(.*)",
