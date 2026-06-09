@@ -1,0 +1,19 @@
+.duration-cell {
+  font-variant-numeric: tabular-nums;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.duration-cell--final {
+  color: var(--color-text-secondary);
+}
+
+.duration-cell--active {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-pill);
+  background: #fff3cd;
+  color: #856404;
+  white-space: nowrap;
+}

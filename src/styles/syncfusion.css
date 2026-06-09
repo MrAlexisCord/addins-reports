@@ -1,0 +1,285 @@
+/* ============================================================
+   Syncfusion Material Theme — overrides con design tokens
+   ============================================================ */
+
+/* Tema base Syncfusion */
+@import '@syncfusion/ej2-base/styles/material.css';
+@import '@syncfusion/ej2-buttons/styles/material.css';
+@import '@syncfusion/ej2-inputs/styles/material.css';
+@import '@syncfusion/ej2-popups/styles/material.css';
+@import '@syncfusion/ej2-navigations/styles/material.css';
+@import '@syncfusion/ej2-dropdowns/styles/material.css';
+@import '@syncfusion/ej2-grids/styles/material.css';
+
+/* ===========================================================
+   GRID
+=========================================================== */
+
+/* Header — degradado de marca */
+.e-grid .e-headercell,
+.e-grid .e-detailheadercell {
+  background: linear-gradient(
+    180deg,
+    var(--color-grid-header-from) 0%,
+    var(--color-grid-header-to) 100%
+  ) !important;
+}
+
+.e-grid .e-headertext,
+.e-grid .e-headercell .e-rhandler {
+  color: var(--color-grid-header-text) !important;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-md);
+}
+
+/* Bordes y texto de celda */
+.e-grid .e-rowcell {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-md);
+  line-height: 1.4;
+  border-color: var(--color-grid-cell-border);
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+/* Hover */
+.e-grid .e-row:hover .e-rowcell {
+  background: var(--color-grid-row-hover) !important;
+}
+
+/* Selección */
+.e-grid .e-row.e-selectionbackground .e-rowcell,
+.e-grid .e-row.e-active .e-rowcell {
+  background: linear-gradient(
+    180deg,
+    var(--color-grid-selected-from) 0%,
+    var(--color-grid-selected-to) 100%
+  ) !important;
+  color: var(--color-text-inverse) !important;
+}
+
+/* Sin borde exterior (el contenedor card lo provee) */
+.e-grid {
+  border: 0 !important;
+  font-family: var(--font-family-base);
+}
+
+.e-grid .e-gridheader {
+  border-top-left-radius: var(--radius-sm);
+  border-top-right-radius: var(--radius-sm);
+}
+
+/* Icono de filtro en header */
+.e-grid .e-filtermenudiv {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.e-grid .e-filtermenudiv:hover {
+  color: var(--color-text-inverse);
+}
+
+/* Icono de ordenamiento */
+.e-grid .e-icon-sortdirect,
+.e-grid .e-icon-ascending,
+.e-grid .e-icon-descending {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Resize handle visible */
+.e-grid .e-rhandler {
+  border-right-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* ===========================================================
+   PAGINADOR
+=========================================================== */
+.e-grid .e-pager {
+  background: var(--color-bg-panel);
+  border-top: 1px solid var(--color-grid-cell-border);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+}
+
+/* Números de página */
+.e-pager .e-numericitem {
+  color: var(--color-text-secondary);
+  border-color: var(--color-line-soft);
+}
+
+.e-pager .e-numericitem:hover {
+  background: var(--color-brand-primary-light);
+  color: var(--color-brand-primary);
+  border-color: var(--color-brand-primary-light);
+}
+
+/* Página activa */
+.e-pager .e-currentitem,
+.e-pager .e-currentitem:hover {
+  background: var(--color-brand-primary) !important;
+  color: var(--color-text-inverse) !important;
+  border-color: var(--color-brand-primary) !important;
+}
+
+/* Botones anterior / siguiente */
+.e-pager .e-prev,
+.e-pager .e-next,
+.e-pager .e-first,
+.e-pager .e-last {
+  color: var(--color-text-secondary);
+}
+
+.e-pager .e-prev:hover,
+.e-pager .e-next:hover,
+.e-pager .e-first:hover,
+.e-pager .e-last:hover {
+  background: var(--color-brand-primary-light);
+  color: var(--color-brand-primary);
+}
+
+/* ===========================================================
+   FILTER DIALOG (modo Excel)
+=========================================================== */
+.e-filter-popup,
+.e-excelfilter {
+  font-family: var(--font-family-base);
+  border-color: var(--color-line-soft) !important;
+  box-shadow: var(--shadow-panel) !important;
+  border-radius: var(--radius-md) !important;
+}
+
+.e-filter-popup .e-dlg-header-content,
+.e-excelfilter .e-dlg-header-content {
+  background: var(--color-bg-panel);
+  color: var(--color-text-main);
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+/* Checkboxes en filtro */
+.e-checkbox-wrapper .e-frame,
+.e-checkbox-wrapper .e-frame.e-check {
+  border-color: var(--color-brand-primary);
+}
+
+.e-checkbox-wrapper .e-frame.e-check {
+  background: var(--color-brand-primary);
+}
+
+/* Botones del dialog de filtro */
+.e-excelfilter .e-primary,
+.e-filter-popup .e-primary {
+  background: var(--color-brand-primary) !important;
+  border-color: var(--color-brand-primary) !important;
+  color: var(--color-text-inverse) !important;
+}
+
+.e-excelfilter .e-primary:hover,
+.e-filter-popup .e-primary:hover {
+  background: var(--color-brand-primary-dark) !important;
+  border-color: var(--color-brand-primary-dark) !important;
+}
+
+/* ===========================================================
+   INPUTS / TEXTBOX
+=========================================================== */
+.e-input-group,
+.e-float-input {
+  font-family: var(--font-family-base);
+}
+
+.e-input-group .e-input,
+.e-float-input input {
+  color: var(--color-text-main);
+  font-size: var(--font-size-base);
+}
+
+/* Línea inferior del input (Material style) */
+.e-input-group::before,
+.e-input-group::after,
+.e-float-input::before,
+.e-float-input::after {
+  background: var(--color-brand-primary);
+}
+
+/* Focus ring */
+.e-input-group.e-input-focus .e-input,
+.e-float-input.e-input-focus input {
+  border-color: var(--color-brand-primary);
+}
+
+/* ===========================================================
+   DROPDOWN LIST / COMBOBOX
+=========================================================== */
+.e-dropdownlist,
+.e-combobox {
+  font-family: var(--font-family-base);
+}
+
+/* Popup del dropdown */
+.e-ddl.e-popup,
+.e-combobox.e-popup {
+  border-color: var(--color-line-soft) !important;
+  box-shadow: var(--shadow-panel) !important;
+  border-radius: var(--radius-md) !important;
+}
+
+/* Item de la lista */
+.e-dropdownbase .e-list-item {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+}
+
+/* Item hover */
+.e-dropdownbase .e-list-item.e-hover,
+.e-dropdownbase .e-list-item:hover {
+  background: var(--color-brand-primary-light) !important;
+  color: var(--color-brand-primary) !important;
+}
+
+/* Item seleccionado */
+.e-dropdownbase .e-list-item.e-active,
+.e-dropdownbase .e-list-item.e-active.e-hover {
+  background: var(--color-brand-primary) !important;
+  color: var(--color-text-inverse) !important;
+}
+
+/* ===========================================================
+   BUTTONS EJ2
+=========================================================== */
+.e-btn.e-primary {
+  background: var(--color-brand-primary);
+  border-color: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+}
+
+.e-btn.e-primary:hover {
+  background: var(--color-brand-primary-dark);
+  border-color: var(--color-brand-primary-dark);
+}
+
+.e-btn.e-primary:focus {
+  box-shadow: 0 0 0 2px var(--color-brand-primary-light);
+  outline: none;
+}
+
+/* ===========================================================
+   SCROLLBAR (WebKit — alineado con paleta)
+=========================================================== */
+.e-grid ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.e-grid ::-webkit-scrollbar-track {
+  background: var(--color-bg-app);
+}
+
+.e-grid ::-webkit-scrollbar-thumb {
+  background: var(--color-line-soft);
+  border-radius: var(--radius-pill);
+}
+
+.e-grid ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}

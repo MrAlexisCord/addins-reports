@@ -1,0 +1,17 @@
+.page-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.page-layout__header {
+  margin-bottom: 0;
+}
+
+.page-layout__body {
+  background: var(--color-bg-panel);
+  border: 1px solid #dbe4ed;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-panel);
+  padding: var(--space-md);
+}

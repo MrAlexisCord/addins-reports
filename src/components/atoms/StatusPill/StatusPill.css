@@ -1,0 +1,40 @@
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 68px;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-pill);
+  background: var(--color-status-default-bg);
+  color: var(--color-status-default-fg);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
+.status-pill--active {
+  background: #e6f4ea;
+  color: #1a7f37;
+}
+
+.status-pill--inactive {
+  background: #fce8e8;
+  color: #c0392b;
+}
+
+.status-pill--warning {
+  background: #fff3cd;
+  color: #856404;
+}
+
+/* Detención prolongada — naranja (alerta moderada) */
+.status-pill--prolonged {
+  background: #fdebd0;
+  color: #935316;
+}
+
+/* Detención no autorizada — rojo (alerta crítica) */
+.status-pill--unauthorized {
+  background: #fce8e8;
+  color: #9b1c1c;
+}

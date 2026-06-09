@@ -1,0 +1,29 @@
+/* ============================================================
+   Utilities — clases de apoyo mínimas
+   Solo para casos que no encajan en BEM de un componente
+   ============================================================ */
+
+/* Accesibilidad: oculto visualmente pero legible por lectores */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Alias semántico */
+.sr-only {
+  composes: visually-hidden;
+}
+
+/* Texto con elipsis en una línea */
+.text-truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

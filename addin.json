@@ -1,0 +1,34 @@
+{
+    "name": "React Addins",
+    "supportEmail": "desarrollo@navisaf.com",
+    "version": "2.0",
+    "items": [
+        {
+            "path": "Pruebas/",
+            "category": "AddIns",
+            "menuName": {
+                "en": "RTT2 - Transporte React",
+                "es": "RTT2 - Transporte React"
+            },
+            "menuId": "Transporte React"
+        },
+        {
+            "path": "Transporte React/",
+            "menuName": {
+                "en": "Visores",
+                "es": "Visores"
+            },
+            "menuId": "Visores"
+        },
+        {
+            "url": "https://aerospace-liver-container.ngrok-free.dev/index.html",
+            "path": "Visores/",
+            "menuName": {
+                "en": "Parametros",
+                "es": "Parametros"
+            }
+        }
+        
+    ],
+    "isSigned": false
+}

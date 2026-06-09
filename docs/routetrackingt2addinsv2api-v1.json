@@ -1,0 +1,298 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "RouteTrackingT2.Addins.V2API",
+    "description": "REST API built with Onion Architecture, CQRS and MediatR.",
+    "contact": {
+      "name": "Development Team",
+      "email": "dev@RouteTrackingT2.Addins.V2API.local"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://localhost:7268/"
+    }
+  ],
+  "paths": {
+    "/api/v1/Diagnostic/im-alive": {
+      "get": {
+        "tags": [
+          "Diagnostics"
+        ],
+        "summary": "Verifies that the API process is running.",
+        "description": "Does not check external dependencies. Always returns 200 OK.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WrapperResponseOfboolean"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WrapperResponseOfstring"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WrapperResponseOfstring"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WrapperResponseOfstring"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Diagnostic/health-check": {
+      "get": {
+        "tags": [
+          "Diagnostics"
+        ],
+        "summary": "Checks the health of all system dependencies.",
+        "description": "Always returns 200 OK. Inspect the `succeeded` field to determine overall health status.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WrapperResponseOfHealthCheckDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WrapperResponseOfstring"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WrapperResponseOfstring"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WrapperResponseOfstring"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/PnpAndPnaReport/pnp-and-pna-report/{database}": {
+      "get": {
+        "tags": [
+          "PnpAndPnaReport"
+        ],
+        "parameters": [
+          {
+            "name": "database",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WrapperResponseOfstring"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WrapperResponseOfstring"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WrapperResponseOfstring"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthCheckDto": {
+        "type": "object",
+        "properties": {
+          "apiAlive": {
+            "type": "boolean",
+            "description": "Indicates whether the API process itself is operational."
+          },
+          "databaseAlive": {
+            "type": "boolean",
+            "description": "Indicates whether the database connection is reachable."
+          },
+          "databaseError": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Error message from the database connectivity check. Null when database is reachable."
+          }
+        },
+        "description": "Health status of all system dependencies."
+      },
+      "WrapperResponseOfboolean": {
+        "type": "object",
+        "properties": {
+          "succeeded": {
+            "type": "boolean",
+            "description": "Indicates whether the operation completed successfully."
+          },
+          "message": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Human-readable result message."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Validation or business rule error messages."
+          },
+          "data": {
+            "type": "boolean",
+            "description": "Response payload."
+          }
+        }
+      },
+      "WrapperResponseOfHealthCheckDto": {
+        "type": "object",
+        "properties": {
+          "succeeded": {
+            "type": "boolean",
+            "description": "Indicates whether the operation completed successfully."
+          },
+          "message": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Human-readable result message."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Validation or business rule error messages."
+          },
+          "data": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Response payload.",
+                "$ref": "#/components/schemas/HealthCheckDto"
+              }
+            ]
+          }
+        }
+      },
+      "WrapperResponseOfstring": {
+        "type": "object",
+        "properties": {
+          "succeeded": {
+            "type": "boolean",
+            "description": "Indicates whether the operation completed successfully."
+          },
+          "message": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Human-readable result message."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Validation or business rule error messages."
+          },
+          "data": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Response payload."
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Diagnostics"
+    },
+    {
+      "name": "PnpAndPnaReport"
+    }
+  ]
+}

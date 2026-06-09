@@ -1,0 +1,12 @@
+Campo de la grilla,Tipo de dato,Que debe mostrar
+Transportista,Texto,Nombre del trasnportador o el valor Desconocido - equivalente al codigo que se cargo en la plneación para ese viaje.
+Placa,Texto,Placa del vehiculo involucrado en la alerta
+Conductor,Texto,Nombre del conductor asociado al viaje o el valor Desconocido cuando no exista informacion disponible.
+Codigo de Viaje,Texto,Identificador unico del viaje relacionado con la alerta de detenciones prolongadas y no autorizadas. No se vosualizaria si el vehiculo no tiene aun viaje asociado es decir no tiene planeación.
+Alerta,Texto,Clasificacion operativa de la alerta: Detenciones prolongadas o Detenciones no autorizadas.
+Latitud,"Decimal, mostrar 8 decimales despues de la coma",Coordenada de latitud del punto donde se detecto la detencion o el evento asociado.
+Longitud,"Decimal, mostrar 8 decimales despues de la coma",Coordenada de longitud del punto donde se detecto la detencion o el evento asociado.
+Ubicacion,Texto largo,"Direccion, referencia geografica o descripcion legible del lugar donde ocurrio la detencion prologada. No aplica pára detenciones no autorizadas."
+Fecha,dd/mm/aaaa hh:mm:ss 24 horas,Fecha y hora en la que se inicio la generación de la alerta de detencion - Hora local del pais
+Duracion (Minutos),"mm:ss
+(ETA) mm:ss","Tiempo acumulado de la detencion expresado en minutos. El dato debe recalcularse cada minuto Cada que se recarga la pantalla debe ser recalculado, si su calculo y actualización debe finalizar cuando la alerta tenga calculado el bd la duración, mientras este siendo calculado aparece el nombre de ETA. Una vez ya finalice la duración de la alerta no aparece ETA, y debe actualizarse el valor real de la duración."

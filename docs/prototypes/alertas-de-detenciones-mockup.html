@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alertas de Detenciones</title>
+    <link href="https://unpkg.com/@syncfusion/ej2@33.2.6/material.css" rel="stylesheet">
+    <script src="https://unpkg.com/@syncfusion/ej2@33.2.6/dist/ej2.min.js"></script>
+    <style>
+        :root {
+            --bg-app: #f4f7fb;
+            --bg-panel: #ffffff;
+            --bg-sidebar: linear-gradient(180deg, #f9fbfd 0%, #eef3f7 100%);
+            --line-soft: #d9e2ec;
+            --brand-blue: #0d77b8;
+            --brand-blue-dark: #245f8f;
+            --brand-blue-light: #ecf5fb;
+            --text-main: #2f4356;
+            --text-muted: #718295;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-app);
+            color: var(--text-main);
+        }
+
+        .app-shell {
+            display: grid;
+            grid-template-columns: 240px minmax(0, 1fr);
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--line-soft);
+            padding: 14px 12px 18px;
+        }
+
+        .brand-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .brand {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1b75bc;
+            letter-spacing: -0.4px;
+        }
+
+        .brand span {
+            color: #7f8fa3;
+        }
+
+        .collapse-btn {
+            width: 32px;
+            height: 32px;
+            border: 0;
+            border-radius: 50%;
+            background: #1493dd;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            border: 1px solid var(--line-soft);
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .quick-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 14px 0 10px;
+        }
+
+        .quick-tab,
+        .mini-tab {
+            border: 1px solid var(--line-soft);
+            border-radius: 8px;
+            background: #fff;
+            color: #4e6277;
+            padding: 10px 12px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .mini-tab {
+            margin-bottom: 12px;
+        }
+
+        .nav-section {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 11px 10px;
+            border-radius: 10px;
+            color: #5e7388;
+            font-size: 15px;
+        }
+
+        .nav-item.active {
+            background: var(--brand-blue-light);
+            color: var(--brand-blue);
+            font-weight: 600;
+        }
+
+        .nav-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .main {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .topbar {
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 10px 18px;
+            background: #fff;
+            border-bottom: 1px solid var(--line-soft);
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .topbar-select,
+        .topbar-filter {
+            height: 36px;
+            border: 1px solid var(--line-soft);
+            border-radius: 6px;
+            background: #fff;
+            padding: 0 12px;
+            color: #53687d;
+            min-width: 172px;
+        }
+
+        .topbar-filter {
+            min-width: 260px;
+        }
+
+        .topbar-icons {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #6d8094;
+            font-size: 18px;
+            white-space: nowrap;
+        }
+
+        .page {
+            padding: 18px 18px 28px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .title-wrap h1 {
+            margin: 0;
+            font-size: 38px;
+            font-weight: 300;
+            color: #3f5f7d;
+            letter-spacing: -0.8px;
+        }
+
+        .title-rule {
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #2393d1 0%, #7fbce0 28%, rgba(127, 188, 224, 0.14) 29%, rgba(127, 188, 224, 0.14) 100%);
+            border-radius: 999px;
+            margin-top: 10px;
+        }
+
+        .content-card {
+            background: var(--bg-panel);
+            border: 1px solid #dbe4ed;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(37, 67, 86, 0.06);
+            padding: 12px;
+        }
+
+        .grid-caption {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #6f8294;
+            font-size: 12px;
+            margin: 2px 0 8px;
+        }
+
+        .excel-chip {
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 3px;
+            background: #1d6f42;
+            color: #fff;
+            font-weight: 700;
+            font-size: 11px;
+        }
+
+        .e-grid {
+            border: 0;
+            font-family: "Segoe UI", Roboto, sans-serif;
+        }
+
+        .e-grid .e-gridheader {
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+        }
+
+        .e-grid .e-headercell {
+            background: linear-gradient(180deg, #1d7ab5 0%, #245f8f 100%) !important;
+            color: #fff !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+        }
+
+        .e-grid .e-headertext {
+            color: #fff !important;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .e-grid .e-rowcell {
+            color: #4b5d70;
+            font-size: 13px;
+            line-height: 1.4;
+            padding-top: 14px;
+            padding-bottom: 14px;
+            border-color: #e6edf4;
+        }
+
+        .e-grid .e-row:hover .e-rowcell {
+            background: #f3f8fd;
+        }
+
+        .e-grid .e-row.e-selectionbackground .e-rowcell,
+        .e-grid .e-row.e-active .e-rowcell {
+            background: linear-gradient(180deg, #2b88c5 0%, #216ea5 100%) !important;
+            color: #fff !important;
+        }
+
+        .e-grid .e-pager {
+            border-top: 1px solid #e6edf4;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 68px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: #eef4f8;
+            color: #48637a;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .coords {
+            font-variant-numeric: tabular-nums;
+        }
+
+        .address {
+            white-space: normal;
+        }
+
+        @media (max-width: 1100px) {
+            .app-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .page {
+                padding: 14px;
+            }
+
+            .title-wrap h1 {
+                font-size: 30px;
+            }
+
+            .topbar {
+                flex-wrap: wrap;
+                height: auto;
+            }
+
+            .topbar-left {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="brand-row">
+                <div class="brand">my<span>GEOTAB</span></div>
+                <button class="collapse-btn">&laquo;</button>
+            </div>
+
+            <div class="search-box">Buscar</div>
+
+            <div class="quick-tabs">
+                <div class="quick-tab">Panel de gr...</div>
+                <div class="quick-tab"><strong>Activos</strong></div>
+            </div>
+            <div class="mini-tab">Mapa</div>
+
+            <nav class="nav-section">
+                <div class="nav-item"><span class="nav-label">Productividad</span><span>+</span></div>
+                <div class="nav-item"><span class="nav-label">Cumplimiento normativo</span><span>+</span></div>
+                <div class="nav-item"><span class="nav-label">Seguridad</span><span>+</span></div>
+                <div class="nav-item"><span class="nav-label">Mantenimiento</span><span>+</span></div>
+                <div class="nav-item"><span class="nav-label">Combustible y energía</span><span>+</span></div>
+                <div class="nav-item"><span class="nav-label">Sostenibilidad</span><span>+</span></div>
+                <div class="nav-item"><span class="nav-label">Personas</span><span>+</span></div>
+                <div class="nav-item active"><span class="nav-label">Add-Ins</span><span>+</span></div>
+                <div class="nav-item"><span class="nav-label">Video</span><span>+</span></div>
+                <div class="nav-item"><span class="nav-label">Marketplace</span></div>
+                <div class="nav-item"><span class="nav-label">Soporte técnico</span><span>+</span></div>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <select class="topbar-select">
+                        <option>Grupos</option>
+                    </select>
+                    <select class="topbar-filter">
+                        <option>Todos los grupos seleccionados</option>
+                    </select>
+                </div>
+                <div class="topbar-icons">
+                    <span>✦</span>
+                    <span>💬</span>
+                    <span>🔔</span>
+                    <span>◯</span>
+                </div>
+            </header>
+
+            <section class="page">
+                <div class="page-header">
+                    <div class="title-wrap" style="width: 100%;">
+                        <h1>Alertas de Detenciones</h1>
+                        <div class="title-rule"></div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="grid-caption">
+                        <span class="excel-chip">X</span>
+                    </div>
+                    <div id="Grid"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        ej.base.enableRipple(false);
+
+        ej.grids.Grid.Inject(
+            ej.grids.Page,
+            ej.grids.Sort,
+            ej.grids.Filter,
+            ej.grids.Toolbar,
+            ej.grids.ExcelExport
+        );
+
+        const alertsData = [
+            {
+                Transportista: 'Ab-Inbev',
+                Placa: '70022225',
+                Conductor: 'Desconocido',
+                CodigoViaje: '20260428FV24',
+                Ruta: 'Detenciones prolongadas',
+                Alerta: 'Alerta de detención prolongada en punto no planificado',
+                Latitud: 23.75935,
+                Longitud: -99.158478,
+                Ubicacion: 'Av. los Almendros 2554, Los Almendros, 87049 Cdad. Victoria, Tamps., México',
+                Fecha: new Date('2026-04-28T21:25:26'),
+                Duracion: 1840
+            },
+            {
+                Transportista: 'Ab-Inbev',
+                Placa: '70022225',
+                Conductor: 'Desconocido',
+                CodigoViaje: '20260428FV24',
+                Ruta: 'Detenciones no autorizadas',
+                Alerta: 'Alerta de detención prolongada en punto no planificado',
+                Latitud: 23.773014,
+                Longitud: -99.139107,
+                Ubicacion: 'Lib. Naciones Unidas 1708, Sin Nombre de Col. 4, 87027 Cdad. Victoria, Tamps., México',
+                Fecha: new Date('2026-04-28T21:25:26'),
+                Duracion: 7795
+            },
+            {
+                Transportista: 'Ab-Inbev',
+                Placa: '70022225',
+                Conductor: 'Desconocido',
+                CodigoViaje: '20260428FV24',
+                Ruta: 'Detenciones prolongadas',
+                Alerta: 'Alerta de detención prolongada en punto no planificado',
+                Latitud: 23.779247,
+                Longitud: -99.146149,
+                Ubicacion: '16 Norberto Treviño Zapata, San Juan Bautista de la Salle, 87027 Cdad. Victoria, Tamps., México',
+                Fecha: new Date('2026-04-28T21:25:26'),
+                Duracion: 2215
+            },
+            {
+                Transportista: 'Ab-Inbev',
+                Placa: '70022225',
+                Conductor: 'Desconocido',
+                CodigoViaje: '20260428FV24',
+                Ruta: 'Detenciones no autorizadas',
+                Alerta: 'Alerta de detención prolongada en punto no planificado',
+                Latitud: 23.759129,
+                Longitud: -99.140076,
+                Ubicacion: 'Av. Tamaulipas 3191, Villa Verde, 87025 Cdad. Victoria, Tamps., México',
+                Fecha: new Date('2026-04-28T21:25:26'),
+                Duracion: 1560
+            },
+            {
+                Transportista: 'Ab-Inbev',
+                Placa: '70022225',
+                Conductor: 'Desconocido',
+                CodigoViaje: '20260428FV24',
+                Ruta: 'Detenciones prolongadas',
+                Alerta: 'Alerta de detención prolongada en punto no planificado',
+                Latitud: 23.755028,
+                Longitud: -99.151962,
+                Ubicacion: 'Mier y Terán 2480, Fovissste, 87049 Cdad. Victoria, Tamps., México',
+                Fecha: new Date('2026-04-28T21:25:26'),
+                Duracion: 2985
+            },
+            {
+                Transportista: 'Ab-Inbev',
+                Placa: '70022225',
+                Conductor: 'Desconocido',
+                CodigoViaje: '20260428FV24',
+                Ruta: 'Detenciones no autorizadas',
+                Alerta: 'Alerta de detención prolongada en punto no planificado',
+                Latitud: 23.757069,
+                Longitud: -99.146279,
+                Ubicacion: 'Yucatán 482, Valle de Aguayo, 87020 Cdad. Victoria, Tamps., México',
+                Fecha: new Date('2026-04-28T21:25:26'),
+                Duracion: 2450
+            },
+            {
+                Transportista: 'Ab-Inbev',
+                Placa: '70022225',
+                Conductor: 'Desconocido',
+                CodigoViaje: '20260428FV24',
+                Ruta: 'Detenciones prolongadas',
+                Alerta: 'Alerta de detención prolongada en punto no planificado',
+                Latitud: 23.762722,
+                Longitud: -99.167686,
+                Ubicacion: 'Lic. Zeferino Fajardo Luna 284, Amp la Libertad, 87019 Cdad. Victoria, Tamps., México',
+                Fecha: new Date('2026-04-28T21:25:26'),
+                Duracion: 1180
+            },
+            {
+                Transportista: 'Ab-Inbev',
+                Placa: '70022225',
+                Conductor: 'Desconocido',
+                CodigoViaje: '20260428FV24',
+                Ruta: 'Detenciones no autorizadas',
+                Alerta: 'Alerta de detención prolongada en punto no planificado',
+                Latitud: 23.7658,
+                Longitud: -99.147522,
+                Ubicacion: 'Quinta Real SN, Quinta Real, 87345 Matamoros, Tamps., México',
+                Fecha: new Date('2026-04-28T21:25:26'),
+                Duracion: 1325
+            },
+            {
+                Transportista: 'Ab-Inbev',
+                Placa: '70022225',
+                Conductor: 'Desconocido',
+                CodigoViaje: '20260428FV24',
+                Ruta: 'Detenciones prolongadas',
+                Alerta: 'Alerta de detención prolongada en punto no planificado',
+                Latitud: 23.759441,
+                Longitud: -99.152275,
+                Ubicacion: 'Sta. Lucía 305, Santa Martha, 87049 Cdad. Victoria, Tamps., México',
+                Fecha: new Date('2026-04-28T21:25:26'),
+                Duracion: 3620
+            },
+            {
+                Transportista: 'Ab-Inbev',
+                Placa: '70022225',
+                Conductor: 'Desconocido',
+                CodigoViaje: '20260428FV24',
+                Ruta: 'Detenciones no autorizadas',
+                Alerta: 'Alerta de detención prolongada en punto no planificado',
+                Latitud: 23.754622,
+                Longitud: -99.160911,
+                Ubicacion: 'Blvd. Praxedis Balboa 1450, Zona Centro, 87000 Cdad. Victoria, Tamps., México',
+                Fecha: new Date('2026-04-28T21:25:26'),
+                Duracion: 540
+            }
+        ];
+
+        const durationTemplate = ({ Duracion }) => Duracion === 'N/A'
+            ? '<span class="status-pill">N/A</span>'
+            : `<span class="coords">${Duracion}</span>`;
+
+        const routeTemplate = ({ Ruta }) => `<span class="status-pill">${Ruta}</span>`;
+
+        const coordinateTemplate = (field) => (data) => `<span class="coords">${Number(data[field]).toFixed(6)}</span>`;
+
+        const addressTemplate = ({ Ubicacion }) => `<div class="address">${Ubicacion}</div>`;
+
+        const grid = new ej.grids.Grid({
+            dataSource: alertsData,
+            height: 540,
+            rowHeight: 62,
+            gridLines: 'Both',
+            allowPaging: true,
+            allowSorting: true,
+            allowFiltering: true,
+            allowExcelExport: true,
+            toolbar: ['Search', 'ExcelExport'],
+            pageSettings: {
+                pageSize: 10,
+                pageSizes: true
+            },
+            filterSettings: {
+                type: 'Menu'
+            },
+            toolbarClick: function(args) {
+                if (args.item.id === 'Grid_excelexport') {
+                    grid.excelExport();
+                }
+            },
+            columns: [
+                { field: 'Transportista', headerText: 'Transportista', width: 150 },
+                { field: 'Placa', headerText: 'Placa', width: 110 },
+                { field: 'Conductor', headerText: 'Conductor', width: 145 },
+                { field: 'CodigoViaje', headerText: 'Código de Viaje', width: 150 },
+                { field: 'Ruta', headerText: 'Alerta', width: 210, textAlign: 'Center', template: routeTemplate },
+                { field: 'Latitud', headerText: 'Latitud', width: 120, textAlign: 'Right', template: coordinateTemplate('Latitud') },
+                { field: 'Longitud', headerText: 'Longitud', width: 120, textAlign: 'Right', template: coordinateTemplate('Longitud') },
+                { field: 'Ubicacion', headerText: 'Ubicación', width: 320, template: addressTemplate },
+                { field: 'Fecha', headerText: 'Fecha', width: 175, type: 'dateTime', format: 'M/d/yyyy h:mm:ss a', textAlign: 'Left' },
+                { field: 'Duracion', headerText: 'Duración (Seg.)', width: 135, textAlign: 'Right', template: durationTemplate }
+            ]
+        });
+
+        grid.appendTo('#Grid');
+
+        grid.selectRow(1);
+    </script>
+</body>
+</html>

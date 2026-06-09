@@ -1,0 +1,6 @@
+.addin-shell {
+  min-height: 100vh;
+  background: var(--color-bg-app);
+  font-family: var(--font-family-base);
+  color: var(--color-text-main);
+}
