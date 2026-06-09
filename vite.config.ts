@@ -1,10 +1,17 @@
 import { defineConfig } from 'vitest/config'
+import { loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 
 // https://vite.dev/config/
-export default defineConfig({
-  base: './',
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '')
+  // En producción (Vercel) usar URL absoluta para que MyGeotab no rompa
+  // las rutas relativas al detectar cambios de hash en el router.
+  // Setear VITE_APP_BASE_URL=https://addins-reports.vercel.app/ en Vercel.
+  const base = env.VITE_APP_BASE_URL || '/'
+  return {
+  base,
   plugins: [react()],
   server: {
     allowedHosts: true,
@@ -73,4 +80,5 @@ export default defineConfig({
       ],
     },
   },
+  }
 })
