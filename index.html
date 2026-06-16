@@ -5,6 +5,68 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>addins-reports</title>
+    <!--
+      MyGeotab Addin Bridge
+      Must run synchronously before the React module so that geotab.addin is
+      registered BEFORE MyGeotab calls initialize(api, state, callback).
+    -->
+    <script>
+      (function () {
+        /** @type {{ api: unknown | null, state: unknown | null }} */
+        window.__GEOTAB_CONTEXT__ = { api: null, state: null };
+
+        var _initialized = false;
+        var _pendingCallbacks = [];
+
+        /**
+         * Register a callback to be called once the Geotab context is ready.
+         * If already initialized, the callback fires immediately.
+         * @param {function} cb
+         */
+        window.__onGeotabReady = function (cb) {
+          if (_initialized) {
+            cb(window.__GEOTAB_CONTEXT__);
+          } else {
+            _pendingCallbacks.push(cb);
+          }
+        };
+
+        function _notifyReady() {
+          _initialized = true;
+          for (var i = 0; i < _pendingCallbacks.length; i++) {
+            _pendingCallbacks[i](window.__GEOTAB_CONTEXT__);
+          }
+          _pendingCallbacks = [];
+        }
+
+        try {
+          // 'geotab' is injected by the MyGeotab parent frame into the iframe.
+          // Register the addin so MyGeotab can call initialize().
+          // eslint-disable-next-line no-undef
+          geotab.addin = geotab.addin || {};
+          // eslint-disable-next-line no-undef
+          geotab.addin.addinsReports = function () {
+            return {
+              initialize: function (api, state, callback) {
+                window.__GEOTAB_CONTEXT__.api   = api;
+                window.__GEOTAB_CONTEXT__.state = state;
+                _notifyReady();
+                if (typeof callback === 'function') callback();
+              },
+              focus: function (api, state) {
+                window.__GEOTAB_CONTEXT__.api   = api;
+                window.__GEOTAB_CONTEXT__.state = state;
+              },
+              blur: function () {}
+            };
+          };
+        } catch (_e) {
+          // Running outside MyGeotab (development / standalone mode).
+          // geotab is not defined; mark as ready immediately so the app uses fallbacks.
+          _notifyReady();
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

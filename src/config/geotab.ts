@@ -5,7 +5,11 @@
  * al momento de inicializar (initialize callback). Este módulo tipifica
  * esos objetos para uso dentro del SPA React.
  *
- * Documentación: https://developers.geotab.com/myGeotab/addIns/addIns
+ * Patrón oficial:
+ *   geotab.addin.<name> = () => ({ initialize(api, state, cb) { … } })
+ *
+ * `window.geotab.getSession` NO existe en versiones modernas de MyGeotab;
+ * la sesión se obtiene del objeto `state` pasado a `initialize`.
  */
 
 export interface GeotabState {
@@ -14,7 +18,9 @@ export interface GeotabState {
   /** Nombre de usuario activo */
   userName?: string
   /** Servidor Geotab (ej. "my.geotab.com") */
-  server?:   string
+  server?: string
+  /** Filtro de grupos activo (disponible en algunos contextos) */
+  getGroupFilter?: () => Array<{ id: string }>
 }
 
 export interface GeotabApi {
@@ -24,16 +30,28 @@ export interface GeotabApi {
     success: (result: T) => void,
     failure: (error: unknown) => void,
   ) => void
-  getSession: (callback: (session: GeotabState) => void) => void
+}
+
+export interface GeotabContext {
+  api: GeotabApi | null
+  state: GeotabState | null
 }
 
 /**
- * Contexto global inyectado por la plataforma MyGeotab.
- * Solo disponible cuando el SPA se ejecuta como addin embebido.
- * En desarrollo, estos valores son undefined.
+ * Contexto global inicializado por el bridge de addin (index.html).
+ * Disponible tanto en modo addin (MyGeotab iframe) como en desarrollo.
  */
 declare global {
   interface Window {
-    geotab?: GeotabApi
+    /** Objeto raíz de la plataforma MyGeotab; contiene `addin` y otros. */
+    geotab?: {
+      addin?: Record<string, unknown>
+      [key: string]: unknown
+    }
+    /** Bridge que almacena api y state capturados en el callback initialize. */
+    __GEOTAB_CONTEXT__: GeotabContext
+    /** Registra un callback que se ejecuta cuando el contexto Geotab esté listo. */
+    __onGeotabReady?: (callback: (ctx: GeotabContext) => void) => void
   }
 }
+
