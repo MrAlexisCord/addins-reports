@@ -20,8 +20,23 @@ export function useGeotabApi() {
 
   useEffect(() => {
     window.__onGeotabReady?.((ctx) => {
-      if (ctx.state?.database) {
-        setSession(ctx.state)
+      // Debug: verificar qué se está recibiendo de MyGeotab
+      console.debug('[useGeotabApi] Contexto recibido:', { 
+        hasState: !!ctx.state,
+        database: ctx.state?.database,
+        userName: ctx.state?.userName,
+        server: ctx.state?.server,
+      })
+
+      // Si recibimos un state de MyGeotab, úsalo (incluso si falta algún campo)
+      if (ctx.state) {
+        // database podría venir en state, sino usar el fallback
+        const database = ctx.state.database || FALLBACK_DATABASE
+        console.debug('[useGeotabApi] Database final:', database)
+        setSession({
+          ...ctx.state,
+          database,
+        } as GeotabState)
       }
     })
   }, [])
