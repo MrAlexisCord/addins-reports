@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { AddinShell } from '@templates/AddinShell'
 
 /**
@@ -31,10 +31,6 @@ const PnpAndPnaReportPage = lazy(
   () => import('@pages/PnpAndPnaReport/PnpAndPnaReportPage').then(m => ({ default: m.PnpAndPnaReportPage })),
 )
 
-const NotFoundPage = lazy(
-  () => import('@pages/NotFound/NotFoundPage').then(m => ({ default: m.NotFoundPage })),
-)
-
 const Loading = () => <div className="sr-only" role="status">Cargando...</div>
 
 export const router = createBrowserRouter([
@@ -63,12 +59,12 @@ export const router = createBrowserRouter([
       },
     ],
   },
+  // MyGeotab puede cargar el iframe con paths inesperados (trailing slash,
+  // query strings transformados, etc.). Redirigir siempre a "/" garantiza
+  // que el index route renderice el reporte sin importar el path del iframe.
+  // El NotFoundPage queda disponible para navegación explícita interna.
   {
     path: '*',
-    element: (
-      <Suspense fallback={<Loading />}>
-        <NotFoundPage />
-      </Suspense>
-    ),
+    element: <Navigate to="/" replace />,
   },
 ])
