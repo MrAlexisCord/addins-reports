@@ -38,10 +38,11 @@ const Loading = () => <div className="sr-only" role="status">Cargando...</div>
 
 export const router = createBrowserRouter([
   {
+    path: '/',
     element: <AddinShell />,
     children: [
       {
-        path: '/pnp-and-pna',
+        path: 'pnp-and-pna',
         element: (
           <Suspense fallback={<Loading />}>
             <PnpAndPnaReportPage />
