@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import type { GeotabState, GeotabApi } from '@config/geotab'
+import type { GeotabState } from '@config/geotab'
 
 const FALLBACK_DATABASE = import.meta.env.VITE_DEV_DATABASE ?? 'demo'
 

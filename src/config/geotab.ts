@@ -21,6 +21,8 @@ export interface GeotabState {
   server?: string
   /** Filtro de grupos activo (disponible en algunos contextos) */
   getGroupFilter?: () => Array<{ id: string }>
+  /** Obtiene el estado actual completo de MyGeotab */
+  getState?: () => { database?: string; [key: string]: unknown }
 }
 
 export interface GeotabApi {
