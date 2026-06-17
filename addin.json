@@ -21,14 +21,13 @@
             "menuId": "Visores"
         },
         {
-            "url": "https://addins-reports.vercel.app/index.html",
+            "url": "https://addins-reports.vercel.app/reports/pnp-and-pna",
             "path": "Visores/",
             "menuName": {
-                "en": "Parametros",
-                "es": "Parametros"
+                "en": "PnP & PnA",
+                "es": "PnP & PnA"
             }
         }
-        
     ],
     "isSigned": false
 }
