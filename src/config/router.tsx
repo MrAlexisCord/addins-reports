@@ -3,27 +3,28 @@ import { createBrowserRouter } from 'react-router-dom'
 import { AddinShell } from '@templates/AddinShell'
 
 /**
- * REGLAS DE URL PARA ADDINS DE MYGEOTAB — leer antes de modificar:
+ * COMPORTAMIENTO REAL DE MYGEOTAB CON ADDINS (documentado con errores reales):
  *
- * 1. NO usar query strings (?param=value) en la URL del addin.json.
- *    MyGeotab genera el ID del addin a partir del URL. Si el URL contiene `?`,
- *    el ID incluye el `?` y MyGeotab intenta cargar un archivo .html LOCAL de
- *    su propio servidor en vez de cargar el iframe externo → 404 garantizado.
+ * MyGeotab carga el iframe usando la URL del campo "url" del addin.json,
+ * PERO el pathname dentro del iframe es SIEMPRE "/" (la raíz del origen).
+ * El segmento de path (ej: /pnp-and-pna) se usa solo como IDENTIFICADOR del
+ * addin en la navegación interna de MyGeotab (#addin-...), nunca llega al iframe.
  *
- * 2. NO usar sub-directorios profundos (/reports/pnp-and-pna).
- *    MyGeotab resuelve los assets concatenando el directorio del URL con los
- *    src del HTML. Con base:'./' los src son relativos (./assets/...).
- *    - URL /reports/pnp-and-pna → dir = /reports/ → /reports/./assets/ ❌
- *    - URL /pnp-and-pna         → dir = /         → /./assets/ = /assets/ ✓
+ * Por eso cada ruta tiene TANTO un `index` route en "/" como un child explícito:
+ *   - MyGeotab carga iframe → pathname "/" → index route → reporte ✓
+ *   - Acceso directo en browser a "/pnp-and-pna" → child route → reporte ✓
  *
- * 3. Usar SIEMPRE un segmento único en la raíz: /nombre-reporte
- *    El directorio del URL es `/`, combinado con `./assets/` da `/assets/` ✓
- *    MyGeotab busca las traducciones en `/translations/es.json` ✓
- *    Addin ID generado es limpio: `addin-react_addins-nombre-reporte` ✓
+ * REGLAS DE URL aprendidas con errores:
+ *   1. Sin query strings (?param): MyGeotab trata el ? como parte del path local → 404.
+ *   2. Sin sub-directorios (/reports/x): MyGeotab prefija el dir a los src de assets
+ *      → doble slash → CORS error.
+ *   3. Segmento único en raíz (/pnp-and-pna): dir = "/" → assets OK.
  *
- * CÓMO AGREGAR UN NUEVO REPORTE:
- *   1. Agregar { path: '/nombre-reporte', element: <NuevoReportePage /> }
- *   2. Agregar ítem en addin.json con url: "https://addins-reports.vercel.app/nombre-reporte"
+ * PARA AGREGAR UN NUEVO REPORTE:
+ *   1. Agregar { index: true, element: <NuevoReporte /> } (si se crea un nuevo despliegue)
+ *      O manejar múltiples reportes con VITE_REPORT_ID en vercel.json.
+ *   2. Agregar la ruta explícita { path: 'nuevo-reporte', element: <NuevoReporte /> }.
+ *   3. Agregar ítem en addin.json: "url": "https://addins-reports.vercel.app/nuevo-reporte".
  */
 
 const PnpAndPnaReportPage = lazy(
@@ -41,6 +42,17 @@ export const router = createBrowserRouter([
     path: '/',
     element: <AddinShell />,
     children: [
+      // index: MyGeotab always loads the iframe at "/" regardless of the addin URL path.
+      // This index route ensures the report renders when pathname is "/".
+      {
+        index: true,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <PnpAndPnaReportPage />
+          </Suspense>
+        ),
+      },
+      // Explicit path for direct browser access / bookmarks.
       {
         path: 'pnp-and-pna',
         element: (
