@@ -21,7 +21,8 @@ export function useGeotabApi() {
   useEffect(() => {
     window.__onGeotabReady?.((ctx) => {
       // Debug: verificar qué se está recibiendo de MyGeotab
-      console.log('[useGeotabApi] Contexto recibido:', { 
+      console.log('[useGeotabApi] Contexto recibido:', {
+        context: ctx, 
         hasState: !!ctx.state,
         database: ctx.state?.database,
         userName: ctx.state?.userName,
