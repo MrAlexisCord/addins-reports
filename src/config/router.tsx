@@ -1,23 +1,29 @@
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter, useSearchParams } from 'react-router-dom'
+import { createBrowserRouter } from 'react-router-dom'
 import { AddinShell } from '@templates/AddinShell'
 
 /**
- * Usa createBrowserRouter (History API / pushState).
+ * REGLAS DE URL PARA ADDINS DE MYGEOTAB — leer antes de modificar:
  *
- * Por qué NO sub-rutas para los reportes:
- *   MyGeotab extrae el "directorio" de la URL del addin y lo usa como prefijo
- *   al cargar recursos del iframe. Con URL `/reports/pnp-and-pna`, MyGeotab
- *   prefija `/reports/` a cada asset → `/reports//assets/index.js` (doble slash)
- *   → Vercel emite 308 Redirect → CORS bloquea la redirección → página en blanco.
+ * 1. NO usar query strings (?param=value) en la URL del addin.json.
+ *    MyGeotab genera el ID del addin a partir del URL. Si el URL contiene `?`,
+ *    el ID incluye el `?` y MyGeotab intenta cargar un archivo .html LOCAL de
+ *    su propio servidor en vez de cargar el iframe externo → 404 garantizado.
  *
- * Solución: la URL del addin vive en la raíz del origen sin sub-rutas.
- *   https://addins-reports.vercel.app/?report=pnp-and-pna
- *   https://addins-reports.vercel.app/?report=otro-reporte
+ * 2. NO usar sub-directorios profundos (/reports/pnp-and-pna).
+ *    MyGeotab resuelve los assets concatenando el directorio del URL con los
+ *    src del HTML. Con base:'./' los src son relativos (./assets/...).
+ *    - URL /reports/pnp-and-pna → dir = /reports/ → /reports/./assets/ ❌
+ *    - URL /pnp-and-pna         → dir = /         → /./assets/ = /assets/ ✓
  *
- * El parámetro `?report` selecciona qué componente renderizar.
- * Cada entrada en addin.json de MyGeotab apunta a la raíz con un ?report distinto.
- * Vercel ya tiene el rewrite `/(.*) → /index.html` para el SPA.
+ * 3. Usar SIEMPRE un segmento único en la raíz: /nombre-reporte
+ *    El directorio del URL es `/`, combinado con `./assets/` da `/assets/` ✓
+ *    MyGeotab busca las traducciones en `/translations/es.json` ✓
+ *    Addin ID generado es limpio: `addin-react_addins-nombre-reporte` ✓
+ *
+ * CÓMO AGREGAR UN NUEVO REPORTE:
+ *   1. Agregar { path: '/nombre-reporte', element: <NuevoReportePage /> }
+ *   2. Agregar ítem en addin.json con url: "https://addins-reports.vercel.app/nombre-reporte"
  */
 
 const PnpAndPnaReportPage = lazy(
@@ -30,39 +36,17 @@ const NotFoundPage = lazy(
 
 const Loading = () => <div className="sr-only" role="status">Cargando...</div>
 
-/**
- * Dispatcher: lee `?report` de la query string y renderiza el componente
- * correspondiente. Añadir nuevos reportes = añadir un case aquí + un ítem
- * en addin.json con la URL `https://addins-reports.vercel.app/?report=<key>`.
- */
-function ReportDispatcher() {
-  const [params] = useSearchParams()
-  const report = params.get('report')
-
-  switch (report) {
-    case 'pnp-and-pna':
-      return (
-        <Suspense fallback={<Loading />}>
-          <PnpAndPnaReportPage />
-        </Suspense>
-      )
-    default:
-      return (
-        <Suspense fallback={<Loading />}>
-          <NotFoundPage />
-        </Suspense>
-      )
-  }
-}
-
 export const router = createBrowserRouter([
   {
-    path: '/',
     element: <AddinShell />,
     children: [
       {
-        index: true,
-        element: <ReportDispatcher />,
+        path: '/pnp-and-pna',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <PnpAndPnaReportPage />
+          </Suspense>
+        ),
       },
     ],
   },
