@@ -4,7 +4,15 @@ import { resolve } from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/',
+  // base: './' genera rutas relativas en el HTML de producción (src="./assets/...")
+  // en lugar de rutas absolutas (src="/assets/...").
+  //
+  // MyGeotab extrae el path de la URL del addin y lo PREFIJA a cada src/href del HTML.
+  // Con base '/', Vite genera src="/assets/index.js". MyGeotab concatena:
+  //   path='/' + '/assets/index.js' = '//assets/index.js'  → 308 redirect → CORS error.
+  // Con base './', Vite genera src="./assets/index.js". MyGeotab resuelve correctamente:
+  //   'https://addins-reports.vercel.app/' + './assets/index.js' = '/assets/index.js' ✓
+  base: './',
   plugins: [react()],
   server: {
     allowedHosts: true as true,
