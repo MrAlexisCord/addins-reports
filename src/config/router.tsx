@@ -1,25 +1,23 @@
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createBrowserRouter, useSearchParams } from 'react-router-dom'
 import { AddinShell } from '@templates/AddinShell'
 
 /**
- * Usa createBrowserRouter (History API / pushState) en lugar de createHashRouter.
+ * Usa createBrowserRouter (History API / pushState).
  *
- * Razones para NO usar HashRouter en este proyecto:
- * - MyGeotab escucha eventos `hashchange` del iframe y los sincroniza con su
- *   propia URL del padre. Cualquier cambio de hash dentro del addin contamina la
- *   URL de MyGeotab y provoca un 404 al recargar (Ctrl+Shift+R).
- * - BrowserRouter usa pushState; MyGeotab NO intercepta `popstate` en iframes,
- *   por lo que la navegación interna del addin es completamente transparente.
+ * Por qué NO sub-rutas para los reportes:
+ *   MyGeotab extrae el "directorio" de la URL del addin y lo usa como prefijo
+ *   al cargar recursos del iframe. Con URL `/reports/pnp-and-pna`, MyGeotab
+ *   prefija `/reports/` a cada asset → `/reports//assets/index.js` (doble slash)
+ *   → Vercel emite 308 Redirect → CORS bloquea la redirección → página en blanco.
  *
- * Vercel ya tiene el rewrite `/(.*) → /index.html` configurado en vercel.json,
- * lo que permite que cualquier ruta profunda funcione tras un refresh.
+ * Solución: la URL del addin vive en la raíz del origen sin sub-rutas.
+ *   https://addins-reports.vercel.app/?report=pnp-and-pna
+ *   https://addins-reports.vercel.app/?report=otro-reporte
  *
- * Ventaja para múltiples reportes:
- *   Cada reporte tiene su propia URL limpia sin `#`:
- *     https://addins-reports.vercel.app/reports/pnp-and-pna
- *     https://addins-reports.vercel.app/reports/otro-reporte
- *   Cada entrada en addin.json de MyGeotab apunta directamente a esa URL.
+ * El parámetro `?report` selecciona qué componente renderizar.
+ * Cada entrada en addin.json de MyGeotab apunta a la raíz con un ?report distinto.
+ * Vercel ya tiene el rewrite `/(.*) → /index.html` para el SPA.
  */
 
 const PnpAndPnaReportPage = lazy(
@@ -32,6 +30,31 @@ const NotFoundPage = lazy(
 
 const Loading = () => <div className="sr-only" role="status">Cargando...</div>
 
+/**
+ * Dispatcher: lee `?report` de la query string y renderiza el componente
+ * correspondiente. Añadir nuevos reportes = añadir un case aquí + un ítem
+ * en addin.json con la URL `https://addins-reports.vercel.app/?report=<key>`.
+ */
+function ReportDispatcher() {
+  const [params] = useSearchParams()
+  const report = params.get('report')
+
+  switch (report) {
+    case 'pnp-and-pna':
+      return (
+        <Suspense fallback={<Loading />}>
+          <PnpAndPnaReportPage />
+        </Suspense>
+      )
+    default:
+      return (
+        <Suspense fallback={<Loading />}>
+          <NotFoundPage />
+        </Suspense>
+      )
+  }
+}
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -39,15 +62,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/reports/pnp-and-pna" replace />,
-      },
-      {
-        path: 'reports/pnp-and-pna',
-        element: (
-          <Suspense fallback={<Loading />}>
-            <PnpAndPnaReportPage />
-          </Suspense>
-        ),
+        element: <ReportDispatcher />,
       },
     ],
   },

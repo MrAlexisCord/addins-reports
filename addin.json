@@ -21,7 +21,7 @@
             "menuId": "Visores"
         },
         {
-            "url": "https://addins-reports.vercel.app/reports/pnp-and-pna",
+            "url": "https://addins-reports.vercel.app/?report=pnp-and-pna",
             "path": "Visores/",
             "menuName": {
                 "en": "PnP & PnA",

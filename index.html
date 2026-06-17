@@ -42,10 +42,12 @@
         try {
           // 'geotab' is injected by the MyGeotab parent frame into the iframe.
           // Register the addin so MyGeotab can call initialize().
+          // Name convention: camelCase of addin.json "name" field.
+          // "React Addins" → reactAddins
           // eslint-disable-next-line no-undef
           geotab.addin = geotab.addin || {};
           // eslint-disable-next-line no-undef
-          geotab.addin.addinsReports = function () {
+          geotab.addin.reactAddins = function () {
             return {
               initialize: function (api, state, callback) {
                 window.__GEOTAB_CONTEXT__.api   = api;
