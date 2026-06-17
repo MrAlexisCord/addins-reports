@@ -30,6 +30,10 @@ export interface GeotabApi {
     success: (result: T) => void,
     failure: (error: unknown) => void,
   ) => void
+  getSession: (
+    success: (session: { database: string; [key: string]: unknown }) => void,
+    failure?: (error: unknown) => void,
+  ) => void
 }
 
 export interface GeotabContext {

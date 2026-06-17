@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react'
-import type { GeotabState } from '@config/geotab'
+import type { GeotabState, GeotabApi } from '@config/geotab'
 
 const FALLBACK_DATABASE = import.meta.env.VITE_DEV_DATABASE ?? 'demo'
 
 /**
  * Hook que obtiene la sesión Geotab activa.
  *
- * - En modo addin (iFrame MyGeotab): lee el `state` inyectado por el callback
- *   `initialize` que fue capturado en el bridge de `index.html`.
+ * - En modo addin (iFrame MyGeotab): extrae la base de datos usando `api.getSession()`
  * - En modo desarrollo: usa la variable VITE_DEV_DATABASE o 'demo'.
  *
- * NOTA: `window.geotab.getSession` no existe en versiones modernas de MyGeotab.
- * El patrón correcto es `geotab.addin.<name>.initialize(api, state, cb)`.
+ * El patrón correcto en MyGeotab es usar `api.getSession()` para obtener
+ * la sesión actual, que incluye la base de datos.
  */
 export function useGeotabApi() {
   const [session, setSession] = useState<GeotabState>({
@@ -20,23 +19,32 @@ export function useGeotabApi() {
 
   useEffect(() => {
     window.__onGeotabReady?.((ctx) => {
-      // Debug: verificar qué se está recibiendo de MyGeotab
-      console.log('[useGeotabApi] Contexto recibido:', {
-        context: ctx, 
-        hasState: !!ctx.state,
-        database: ctx.state?.database,
-        userName: ctx.state?.userName,
-        server: ctx.state?.server,
-      })
+      console.log('[useGeotabApi] Contexto recibido:', ctx)
 
-      // Si recibimos un state de MyGeotab, úsalo (incluso si falta algún campo)
-      if (ctx.state) {
-        // database podría venir en state, sino usar el fallback
-        const database = ctx.state.database || FALLBACK_DATABASE
-        console.log('[useGeotabApi] Database final:', database)
+      // Si tenemos acceso a MyGeotab (ctx.api), obtener la sesión real
+      if (ctx.api) {
+        (ctx.api as GeotabApi).getSession(
+          (session: { database: string; [key: string]: unknown }) => {
+            console.log('[useGeotabApi] Sesión obtenida:', session)
+            setSession({
+              ...ctx.state,
+              database: session.database || FALLBACK_DATABASE,
+            } as GeotabState)
+          },
+          (error: unknown) => {
+            console.error('[useGeotabApi] Error al obtener sesión:', error)
+            // Fallback a variable de entorno si falla
+            setSession({
+              ...ctx.state,
+              database: FALLBACK_DATABASE,
+            } as GeotabState)
+          }
+        )
+      } else if (ctx.state) {
+        // Fallback si no hay api.getSession (desarrollo)
         setSession({
           ...ctx.state,
-          database,
+          database: FALLBACK_DATABASE,
         } as GeotabState)
       }
     })
