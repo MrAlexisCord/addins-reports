@@ -20,9 +20,10 @@ export function useGeotabApi() {
       console.log('[useGeotabApi] Contexto recibido:', ctx)
 
       if (ctx.api) {
-        // En el SDK moderno, api.getSession() retorna una Promise
-        Promise.resolve((ctx.api as any).getSession())
-          .then((geotabSession: any) => {
+        // api.getSession(callback) — callback-based, NO retorna Promise.
+        // El segundo parámetro es "includeRelayParameters" (boolean); no pasar error callback ahí.
+        try {
+          ;(ctx.api as any).getSession((geotabSession: any) => {
             console.log('[useGeotabApi] Sesión obtenida:', geotabSession)
             setSession({
               database: geotabSession?.database || FALLBACK_DATABASE,
@@ -30,10 +31,10 @@ export function useGeotabApi() {
               server:   geotabSession?.server,
             })
           })
-          .catch((err: unknown) => {
-            console.error('[useGeotabApi] Error al obtener sesión:', err)
-            setSession({ database: FALLBACK_DATABASE })
-          })
+        } catch (err) {
+          console.error('[useGeotabApi] Error al obtener sesión:', err)
+          setSession({ database: FALLBACK_DATABASE })
+        }
       } else {
         // Modo desarrollo sin iframe de MyGeotab
         setSession({ database: FALLBACK_DATABASE })
