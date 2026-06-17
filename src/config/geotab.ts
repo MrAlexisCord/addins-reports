@@ -8,8 +8,8 @@
  * Patrón oficial:
  *   geotab.addin.<name> = () => ({ initialize(api, state, cb) { … } })
  *
- * `window.geotab.getSession` NO existe en versiones modernas de MyGeotab;
- * la sesión se obtiene del objeto `state` pasado a `initialize`.
+ * Para obtener la sesión actual en MyGeotab moderno, usar `state.getState()`
+ * que retorna el estado actual incluyendo la base de datos.
  */
 
 export interface GeotabState {
